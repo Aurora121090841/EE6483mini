@@ -8,7 +8,7 @@ from config import DATA_CONFIG, TRAIN_CONFIG, IMBALANCE_CONFIG, MODEL_CONFIG
 import os
 
 # --------------------------
-# 1. 通用HuggingFace数据集封装类（支持所有图像分类数据集）
+# 1. 通用HuggingFace数据集封装类
 # --------------------------
 class HuggingFaceDataset(Dataset):
     def __init__(self, dataset, transform=None):
@@ -37,7 +37,7 @@ class HuggingFaceDataset(Dataset):
         return image, label
 
 # --------------------------
-# 2. 数据预处理转换函数（完整实现，无外部依赖）
+# 2. 数据预处理转换函数
 # --------------------------
 def get_transforms(dataset_type, normalize_mean, normalize_std, is_train=True):
     img_size = MODEL_CONFIG['img_size']
@@ -75,7 +75,7 @@ def get_transforms(dataset_type, normalize_mean, normalize_std, is_train=True):
             ])
 
 # --------------------------
-# 3. 在线数据集加载函数（纯在线，无本地依赖）
+# 3. 在线数据集加载函数
 # --------------------------
 def get_online_datasets(dataset_type):
     if dataset_type == 'cifar10':
@@ -107,7 +107,7 @@ def get_online_datasets(dataset_type):
         # 从HuggingFace在线加载Aurora1609/cat_vs_dog
         dataset = load_dataset(DATA_CONFIG['catdog']['huggingface_name'])
         
-        # 处理数据集分割（优先用原有分割，无则拆分）
+        # 处理数据集分割
         if 'train' in dataset and 'validation' in dataset and 'test' in dataset:
             train_dataset = dataset['train']
             val_dataset = dataset['validation']
@@ -142,7 +142,7 @@ def get_online_datasets(dataset_type):
     return train_dataset, val_dataset, test_dataset, class_names, num_classes, class_to_idx
 
 # --------------------------
-# 4. 类别权重计算函数（用于加权损失策略）
+# 4. 类别权重计算函数
 # --------------------------
 def get_class_weights(dataset_type, train_dataset):
     """计算类别权重（用于加权损失）"""
@@ -186,7 +186,7 @@ def get_dataloaders(dataset_type):
     test_dataset.transform = val_transform
     
     # --------------------------
-    # 类别不平衡处理（可通过配置开关控制）
+    # 类别不平衡处理
     # --------------------------
     train_loader = None
     if IMBALANCE_CONFIG['enable']:  # 总开关：是否启用不平衡处理
