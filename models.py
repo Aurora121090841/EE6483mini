@@ -10,7 +10,7 @@ from torchvision import models
 from config import MODEL_CONFIG  # 仅导入一次
 
 # --------------------------
-# 1. 自定义CNN模型（保留优化版，删除重复的CatDogCNN）
+# 1. 自定义CNN模型
 # --------------------------
 class CustomCNN(nn.Module):
     """自定义轻量CNN（适配2/10分类，输入尺寸224x224）"""
@@ -73,7 +73,7 @@ class CustomCNN(nn.Module):
         return x
 
 # --------------------------
-# 2. 迁移学习模型（统一整合，无需单独定义类）
+# 2. 迁移学习模型
 # --------------------------
 def get_model(model_name, num_classes=2, pretrained=MODEL_CONFIG['pretrained'], freeze_features=MODEL_CONFIG['freeze_features']):
     """
@@ -91,7 +91,7 @@ def get_model(model_name, num_classes=2, pretrained=MODEL_CONFIG['pretrained'], 
     if model_name == 'custom_cnn':
         model = CustomCNN(num_classes=num_classes)
 
-    # 2. ResNet系列（补充resnet18，满足用户需求）
+    # 2. ResNet系列
     elif model_name == 'resnet18':
         model = models.resnet18(pretrained=pretrained)
         # 替换最后一层全连接层
